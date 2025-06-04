@@ -32,26 +32,65 @@ const register = async () => {
 </script>
 
 <template>
-  <div class="bg-blue-500 text-white p-4 rounded">
-    <h1 class="text-2xl font-bold">Register</h1>
-  </div>
-  <form @submit.prevent="register">
-    <div>
-      <label for="name">Name</label>
-      <input type="text" v-model="name" />
+  <form @submit.prevent="register" class="max-w-md mx-auto mt-10">
+    <div class="mb-4">
+      <label for="name" class="block text-gray-700 text-sm font-bold mb-2"
+        >Name:</label
+      >
+      <input
+        type="text"
+        id="name"
+        v-model="name"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+      />
     </div>
-    <div>
-      <label for="email">Email</label>
-      <input type="email" v-model="email" />
+    <div class="mb-4">
+      <label for="email" class="block text-gray-700 text-sm font-bold mb-2"
+        >Email:</label
+      >
+      <input
+        type="email"
+        id="email"
+        v-model="email"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+      />
     </div>
-    <div>
-      <label for="password">Password</label>
-      <input type="password" v-model="password" />
+    <div class="mb-4">
+      <label for="password" class="block text-gray-700 text-sm font-bold mb-2"
+        >Password:</label
+      >
+      <input
+        type="password"
+        id="password"
+        v-model="password"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+      />
     </div>
-    <div>
-      <label for="password_confirmation">Password Confirmation</label>
-      <input type="password" v-model="password_confirmation" />
+    <div class="mb-4">
+      <label
+        for="password_confirmation"
+        class="block text-gray-700 text-sm font-bold mb-2"
+        >Confirm Password:</label
+      >
+      <input
+        type="password"
+        id="password_confirmation"
+        v-model="password_confirmation"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+      />
     </div>
-    <button type="submit">Register</button>
+    <div v-if="errors.length > 0" class="mb-4">
+      <ul>
+        <li v-for="error in errors" :key="error" class="text-red-500 text-sm">
+          {{ error }}
+        </li>
+      </ul>
+    </div>
+    <button
+      type="submit"
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    >
+      Register
+    </button>
   </form>
 </template>

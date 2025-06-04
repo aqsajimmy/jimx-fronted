@@ -3,6 +3,8 @@ import HomeView from "../views/HomeView.vue";
 import Register from "../views/auth/Register.vue";
 import Login from "../views/auth/Login.vue";
 import Dashboard from "../views/auth/Dashboard.vue";
+import ContactView from "../views/ContactView.vue";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -25,6 +27,11 @@ const router = createRouter({
       path: "/dashboard",
       name: "dashboard",
       component: Dashboard,
+    },
+    {
+      path: "/contact",
+      name: "contact",
+      component: ContactView,
     },
   ],
 });

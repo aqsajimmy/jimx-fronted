@@ -1,3 +1,6 @@
 /* src/assets/main.css */
 @import "tailwindcss";
 /* Your custom styles below */
+body {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}

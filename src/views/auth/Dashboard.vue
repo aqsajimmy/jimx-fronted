@@ -1,7 +1,5 @@
-<script lang="ts">
-export default {
-  name: "Dashboard",
-};
+<script setup lang="ts">
+
 </script>
 <template>
   <div>
