@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import axios from "axios";
 
 axios.defaults.baseURL = "http://localhost:8000";
