@@ -1,38 +1,39 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import axios from "axios";
+import axiosInstance from "@/lib/axios";
+import { reactive, ref } from "vue";
 
-axios.defaults.baseURL = "http://localhost:8000";
-axios.defaults.withCredentials = true;
-axios.defaults.withXSRFToken = true;
+interface RegisterForm {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+}
 
-const name = ref("");
-const email = ref("");
-const password = ref("");
-const password_confirmation = ref("");
+const form = reactive<RegisterForm>({
+  name: "",
+  email: "",
+  password: "",
+  password_confirmation: "",
+});
 
-const errors = ref([]);
+const errors = ref<string[]>([]);
 
-const register = async () => {
+const register = async (payload: RegisterForm) => {
+  await axiosInstance.get("/sanctum/csrf-cookie", {
+    baseURL: "http://localhost:8000",
+  });
   try {
-    await axios.get("/sanctum/csrf-cookie");
-    const response = await axios.post("/api/register", {
-      name: name.value,
-      email: email.value,
-      password: password.value,
-      password_confirmation: password_confirmation.value,
-    });
+    const response = await axiosInstance.post("/register", payload);
     console.log(response.data);
-    // Handle successful registration
-  } catch (error: any) {
-    errors.value = error.response.data.errors;
-    console.error(error.response.data);
+  } catch (error) {
+    errors.value = error.response?.data?.errors || ["An error occurred"];
+    console.error(error.response?.data);
   }
 };
 </script>
 
 <template>
-  <form @submit.prevent="register" class="max-w-md mx-auto mt-10">
+  <form @submit.prevent="register(form)" class="max-w-md mx-auto mt-10">
     <div class="mb-4">
       <label for="name" class="block text-gray-700 text-sm font-bold mb-2"
         >Name:</label
@@ -40,7 +41,7 @@ const register = async () => {
       <input
         type="text"
         id="name"
-        v-model="name"
+        v-model="form.name"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
       />
     </div>
@@ -51,7 +52,7 @@ const register = async () => {
       <input
         type="email"
         id="email"
-        v-model="email"
+        v-model="form.email"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
       />
     </div>
@@ -62,7 +63,7 @@ const register = async () => {
       <input
         type="password"
         id="password"
-        v-model="password"
+        v-model="form.password"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
       />
     </div>
@@ -75,7 +76,7 @@ const register = async () => {
       <input
         type="password"
         id="password_confirmation"
-        v-model="password_confirmation"
+        v-model="form.password_confirmation"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
       />
     </div>
