@@ -32,8 +32,8 @@ const register = async () => {
 </script>
 
 <template>
-  <div>
-    <h1>Register</h1>
+  <div class="bg-blue-500 text-white p-4 rounded">
+    <h1 class="text-2xl font-bold">Register</h1>
   </div>
   <form @submit.prevent="register">
     <div>
