@@ -1,54 +1,69 @@
 <script setup lang="ts">
+import axiosInstance from "@/lib/axios";
+import { reactive, ref } from "vue";
 
+interface LoginForm {
+  email: string;
+  password: string;
+}
+
+const form = reactive<LoginForm>({
+  email: "",
+  password: "",
+});
+
+const errors = ref<string[]>([]);
+
+const login = async (payload: LoginForm) => {
+  try {
+    await axiosInstance.get("/sanctum/csrf-cookie", {
+      baseURL: "http://localhost:8000",
+    });
+    const response = await axiosInstance.post("/login", payload);
+    console.log(response.data); // Handle successful login, e.g., redirect or store user data
+    // window.location.href = "/dashboard";
+  } catch (error: any) {
+    errors.value = error.response?.data?.errors || ["An error occurred"];
+    console.error(error.response?.data);
+  }
+};
 </script>
 
 <template>
-  <section class="text-gray-600 body-font bg-gray-100">
-    <div class="container mx-auto px-5 py-24">
-      <div class="flex flex-col text-center w-full mb-20">
-        <h1 class="text-2xl mb-4 font-medium text-gray-900">Login</h1>
-        <p class="mb-8 leading-relaxed">
-          Please enter your email and password to login.
-        </p>
-      </div>
-      <div class="flex flex-wrap -m-4">
-        <div class="p-4 sm:w-1/2 lg:w-1/3">
-          <div class="text-left">
-            <label for="email" class="block text-sm font-medium text-gray-700"
-              >Email</label
-            >
-            <input
-              type="email"
-              id="email"
-              name="email"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-        </div>
-        <div class="p-4 sm:w-1/2 lg:w-1/3">
-          <div class="text-left">
-            <label
-              for="password"
-              class="block text-sm font-medium text-gray-700"
-              >Password</label
-            >
-            <input
-              type="password"
-              id="password"
-              name="password"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-        </div>
-        <div class="p-4 sm:w-1/2 lg:w-1/3">
-          <button
-            type="submit"
-            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Login
-          </button>
-        </div>
-      </div>
+  <form @submit.prevent="login(form)" class="max-w-md mx-auto mt-10">
+    <div class="mb-4">
+      <label for="email" class="leading-7 text-sm text-gray-600">Email:</label>
+      <input
+        type="email"
+        id="email"
+        v-model="form.email"
+        class="w-full bg-gray-100 rounded border bg-opacity-50 border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:bg-transparent focus:border-indigo-500 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+      />
     </div>
-  </section>
+    <div class="mb-4">
+      <label for="password" class="leading-7 text-sm text-gray-600"
+        >Password:</label
+      >
+      <input
+        type="password"
+        id="password"
+        v-model="form.password"
+        class="w-full bg-gray-100 rounded border bg-opacity-50 border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:bg-transparent focus:border-indigo-500 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+      />
+    </div>
+    <div v-if="errors.length > 0" class="mb-4">
+      <ul>
+        <li v-for="error in errors" :key="error" class="text-red-500 text-sm">
+          {{ error }}
+        </li>
+      </ul>
+    </div>
+    <button
+      cursor="pointer"
+      type="submit"
+      class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg focus:shadow-outline cursor-pointer"
+    >
+      Login
+    </button>
+  </form>
 </template>

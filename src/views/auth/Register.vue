@@ -19,13 +19,13 @@ const form = reactive<RegisterForm>({
 const errors = ref<string[]>([]);
 
 const register = async (payload: RegisterForm) => {
-  await axiosInstance.get("/sanctum/csrf-cookie", {
-    baseURL: "http://localhost:8000",
-  });
   try {
+    await axiosInstance.get("/sanctum/csrf-cookie", {
+      baseURL: "http://localhost:8000",
+    });
     const response = await axiosInstance.post("/register", payload);
     console.log(response.data);
-  } catch (error) {
+  } catch (error: any) {
     errors.value = error.response?.data?.errors || ["An error occurred"];
     console.error(error.response?.data);
   }
@@ -35,49 +35,43 @@ const register = async (payload: RegisterForm) => {
 <template>
   <form @submit.prevent="register(form)" class="max-w-md mx-auto mt-10">
     <div class="mb-4">
-      <label for="name" class="block text-gray-700 text-sm font-bold mb-2"
-        >Name:</label
-      >
+      <label for="name" class="leading-7 text-sm text-gray-600">Name:</label>
       <input
         type="text"
         id="name"
         v-model="form.name"
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        class="w-full bg-gray-100 rounded border bg-opacity-50 border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:bg-transparent focus:border-indigo-500 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
       />
     </div>
     <div class="mb-4">
-      <label for="email" class="block text-gray-700 text-sm font-bold mb-2"
-        >Email:</label
-      >
+      <label for="email" class="leading-7 text-sm text-gray-600">Email:</label>
       <input
         type="email"
         id="email"
         v-model="form.email"
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        class="w-full bg-gray-100 rounded border bg-opacity-50 border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:bg-transparent focus:border-indigo-500 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
       />
     </div>
     <div class="mb-4">
-      <label for="password" class="block text-gray-700 text-sm font-bold mb-2"
+      <label for="password" class="leading-7 text-sm text-gray-600"
         >Password:</label
       >
       <input
         type="password"
         id="password"
         v-model="form.password"
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        class="w-full bg-gray-100 rounded border bg-opacity-50 border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:bg-transparent focus:border-indigo-500 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
       />
     </div>
     <div class="mb-4">
-      <label
-        for="password_confirmation"
-        class="block text-gray-700 text-sm font-bold mb-2"
+      <label for="password_confirmation" class="leading-7 text-sm text-gray-600"
         >Confirm Password:</label
       >
       <input
         type="password"
         id="password_confirmation"
         v-model="form.password_confirmation"
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        class="w-full bg-gray-100 rounded border bg-opacity-50 border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:bg-transparent focus:border-indigo-500 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
       />
     </div>
     <div v-if="errors.length > 0" class="mb-4">
@@ -88,8 +82,9 @@ const register = async (payload: RegisterForm) => {
       </ul>
     </div>
     <button
+      cursor="pointer"
       type="submit"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg focus:shadow-outline cursor-pointer"
     >
       Register
     </button>
