@@ -18,10 +18,10 @@ const login = async (payload: LoginForm) => {
   try {
     await axiosInstance.get("/sanctum/csrf-cookie", {
       baseURL: "http://localhost:8000",
+      withCredentials: true,
     });
     const response = await axiosInstance.post("/login", payload);
-    console.log(response.data); // Handle successful login, e.g., redirect or store user data
-    // window.location.href = "/dashboard";
+    console.log(response.data, " Login successful");
   } catch (error: any) {
     errors.value = error.response?.data?.errors || ["An error occurred"];
     console.error(error.response?.data);

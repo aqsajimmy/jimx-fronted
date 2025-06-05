@@ -32,6 +32,8 @@
         <RouterLink to="/login" class="mr-5 hover:text-gray-900"
           >Login</RouterLink
         >
+        <RouterLink to="/dashboard" class="mr-5 hover:text-gray-900"
+          >Dashboard</RouterLink>
       </nav>
       <RouterLink
         to="/contact"
