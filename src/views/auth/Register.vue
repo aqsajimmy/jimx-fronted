@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import axiosInstance from "@/lib/axios";
 import { reactive, ref } from "vue";
-
-interface RegisterForm {
-  name: string;
-  email: string;
-  password: string;
-  password_confirmation: string;
-}
+import type { RegisterForm } from "@/types";
 
 const form = reactive<RegisterForm>({
   name: "",

@@ -1,30 +1,28 @@
 <script setup lang="ts">
 import axiosInstance from "@/lib/axios";
 import { reactive, ref } from "vue";
-
-interface LoginForm {
-  email: string;
-  password: string;
-}
+import type { LoginForm } from "@/types";
+import router from "@/router";
 
 const form = reactive<LoginForm>({
   email: "",
   password: "",
 });
 
-const errors = ref<string[]>([]);
+const errors = ref<{ [key: string]: string[] }>({});
 
 const login = async (payload: LoginForm) => {
+  await axiosInstance.get("/sanctum/csrf-cookie", {
+    baseURL: "http://localhost:8000",
+  });
   try {
-    await axiosInstance.get("/sanctum/csrf-cookie", {
-      baseURL: "http://localhost:8000",
-      withCredentials: true,
-    });
-    const response = await axiosInstance.post("/login", payload);
-    console.log(response.data, " Login successful");
+    await axiosInstance.post("/login", payload);
+    router.push("/dashboard");
   } catch (error: any) {
-    errors.value = error.response?.data?.errors || ["An error occurred"];
-    console.error(error.response?.data);
+    errors.value = error.response?.data?.errors || {
+      general: ["An error occurred"],
+    };
+    // console.error(error.response?.data);
   }
 };
 </script>
@@ -39,6 +37,9 @@ const login = async (payload: LoginForm) => {
         v-model="form.email"
         class="w-full bg-gray-100 rounded border bg-opacity-50 border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:bg-transparent focus:border-indigo-500 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
       />
+      <div v-if="errors.email" class="text-red-500 text-sm">
+      {{ errors.email[0] }}
+    </div>
     </div>
     <div class="mb-4">
       <label for="password" class="leading-7 text-sm text-gray-600"
@@ -51,13 +52,6 @@ const login = async (payload: LoginForm) => {
         class="w-full bg-gray-100 rounded border bg-opacity-50 border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:bg-transparent focus:border-indigo-500 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
       />
     </div>
-    <div v-if="errors.length > 0" class="mb-4">
-      <ul>
-        <li v-for="error in errors" :key="error" class="text-red-500 text-sm">
-          {{ error }}
-        </li>
-      </ul>
-    </div>
     <button
       cursor="pointer"
       type="submit"
@@ -65,5 +59,9 @@ const login = async (payload: LoginForm) => {
     >
       Login
     </button>
+    <!-- General error message -->
+    <div v-if="errors.general" class="text-red-500 text-sm mt-2">
+      {{ errors.general[0] }}
+    </div>
   </form>
 </template>
