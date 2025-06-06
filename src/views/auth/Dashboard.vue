@@ -6,17 +6,19 @@ import type { User } from "@/types";
 
 const user = ref<User | null>(null);
 
-const errors = reactive({
-  value: [] as string[],
-});
+const errors = ref<string | null>(null);
 
 const getUser = async () => {
+
   try {
     const response = await axiosInstance.get("/user");
     user.value = response.data;
   } catch (error: any) {
-    errors.value = error.response?.data?.errors || ["An error occurred"];
-    console.error(error.response?.data);
+    if (error.response && error.response.data && error.response.data.message) {
+      errors.value = error.response.data.message;
+    } else {
+      errors.value = "An unexpected error occurred.";
+    }
   }
 };
 
@@ -38,9 +40,6 @@ onMounted(() => {
   <div class="max-w-2xl mx-auto mt-10">
     <h1>Dashboard</h1>
   </div>
-  <div v-if="user && user.name === ''">
-
-  </div>
   <div
     v-if="user && user.name"
     class="max-w-2xl mx-auto mt-10 flex flex-col items-center bg-white p-6 rounded-lg shadow-md"
@@ -55,12 +54,18 @@ onMounted(() => {
       Logout
     </button>
   </div>
-  <div v-else>
+  <div v-if="!user">
     <div class="animate-pulse flex flex-col items-center">
       <div class="h-6 bg-gray-300 rounded w-1/3 mb-4"></div>
       <div class="h-4 bg-gray-300 rounded w-2/3"></div>
       <div class="h-4 bg-gray-300 rounded w-1/2 mt-2"></div>
       <div class="h-4 bg-gray-300 rounded w-1/4 mt-2"></div>
     </div>
+  </div>
+  <div v-if="errors" class="text-red-500 text-sm text-center mt-4">
+    {{ errors }}
+  </div>
+  <div v-if="!user" class="text-center mt-4">
+    <p class="text-gray-500">Please log in to view your dashboard.</p>
   </div>
 </template>
